@@ -4,6 +4,8 @@
 
 import inspect
 import redbaron
+import threading
+from time import sleep
 
 
 def get_new_source(target):
@@ -37,6 +39,17 @@ class Reloadr:
     def _reload(self):
         self._target = reload_class(self._target)
         self._instance.__class__ = self._target
+
+    def _autoreload(self, interval=1):
+        while True:
+            self._reload()
+            sleep(interval)
+
+    def _start_autoreload(self, interval=1):
+        thread = threading.Thread(target=self._autoreload)
+        print(thread)
+        thread.start()
+        print(thread)
 
 
 reloadr = Reloadr
