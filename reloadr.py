@@ -2,6 +2,9 @@
 (c) 2015 Hugo Herter
 """
 
+__author__ = "Hugo Herter"
+__version__ = 0.1
+
 import inspect
 import redbaron
 import threading
