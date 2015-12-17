@@ -33,3 +33,13 @@ source code of the decorated class or function.
 ``git clone https://github.com/hoh/reloadr.git``
 
 ``python examples/01_manual_reload.py``
+
+How it works
+============
+
+Instead of importing your source file again, which can lead to undesired side
+effects, Reloadr fetches the new code of your function within the Python source
+file, and executes that code in the environment of your already loaded module.
+
+This allows it to reload code that is followed by blocking instructions such
+as the infinite loops you can find in the examples.
