@@ -11,11 +11,11 @@ from setuptools import setup, find_packages
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
-with open('README.md') as file:
+with open('README.rst') as file:
     long_description = file.read()
 
 setup(name='Reloadr',
-      version='0.1',
+      version='0.1.1',
       description='Hot code reloading tool for Python',
       long_description=long_description,
       author='Hugo Herter',
