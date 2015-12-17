@@ -20,3 +20,7 @@ class SomeThing:
     def do_stuff(self):
         pass
 ```
+
+# Examples
+
+Launch an example (they each contain an infinite loop), then change the source code of the decorated class or function.
