@@ -24,3 +24,7 @@ class SomeThing:
 # Examples
 
 Launch an example (they each contain an infinite loop), then change the source code of the decorated class or function.
+
+`git clone https://github.com/hoh/reloadr.git`
+
+`python examples/01_manual_reload.py`
