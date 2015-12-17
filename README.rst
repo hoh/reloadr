@@ -47,3 +47,10 @@ as the infinite loops you can find in the examples.
 To achieve this, Reloadr relies on  `RedBaron
 <https://github.com/psycojoker/redbaron/>`_ , an great tool for manipulating
 Python source code.
+
+Future plans
+============
+
+This project is still in its early stages. The next main step is to add an
+option for using ``inotify`` to receive file change events directly from the
+filesystem.
