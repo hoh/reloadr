@@ -40,7 +40,8 @@ def reload_function(target):
     return locals_[target.__name__]._target
 
 
-class ClassReloadr:
+class GenericReloadr:
+
     def __init__(self, target):
         self._target = target
         self._instance = None
@@ -53,50 +54,30 @@ class ClassReloadr:
             return self._instance
         else:
             return self._instance.__call__(*args, **kwargs)
+
+    def _autoreload(self, interval=1):
+        while True:
+            self._reload()
+            sleep(interval)
+
+    def _start_autoreload(self, interval=1):
+        thread = threading.Thread(target=self._autoreload)
+        print(thread)
+        thread.start()
+        print(thread)
+
+
+class ClassReloadr(GenericReloadr):
 
     def _reload(self):
         self._target = reload_class(self._target)
         self._instance.__class__ = self._target
 
-    def _autoreload(self, interval=1):
-        while True:
-            self._reload()
-            sleep(interval)
 
-    def _start_autoreload(self, interval=1):
-        thread = threading.Thread(target=self._autoreload)
-        print(thread)
-        thread.start()
-        print(thread)
-
-
-class FuncReloadr:
-    def __init__(self, target):
-        self._target = target
-        self._instance = None
-
-    def __call__(self, *args, **kwargs):
-        if self._instance is None:
-            self._init_args = args
-            self._init_kwargs = kwargs
-            self._instance = self._target.__call__(*args, **kwargs)
-            return self._instance
-        else:
-            return self._instance.__call__(*args, **kwargs)
+class FuncReloadr(GenericReloadr):
 
     def _reload(self):
         self._instance = reload_function(self._target)
-
-    def _autoreload(self, interval=1):
-        while True:
-            self._reload()
-            sleep(interval)
-
-    def _start_autoreload(self, interval=1):
-        thread = threading.Thread(target=self._autoreload)
-        print(thread)
-        thread.start()
-        print(thread)
 
 
 def reloadr(target):
