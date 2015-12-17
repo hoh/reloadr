@@ -43,3 +43,7 @@ file, and executes that code in the environment of your already loaded module.
 
 This allows it to reload code that is followed by blocking instructions such
 as the infinite loops you can find in the examples.
+
+To achieve this, Reloadr relies on  `RedBaron
+<https://github.com/psycojoker/redbaron/>`_ , an great tool for manipulating
+Python source code.
