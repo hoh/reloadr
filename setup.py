@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-
-# This file is part of Supernova.
-#
-# Copyright (C) 2014 Railnova (https://www.railnova.eu)
+"""Reloadr - Python library for hot code reloading
+(c) 2015 Hugo Herter
+"""
 
 import os
 
