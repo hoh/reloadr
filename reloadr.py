@@ -10,35 +10,52 @@ import types
 from time import sleep
 
 __author__ = "Hugo Herter"
-__version__ = '0.1.2'
+__version__ = '0.2.0'
 
 
-def get_new_class_source(target):
+def get_new_source(target, kind):
+    """Get the new source code of the target if given kind ('class' or 'def').
+
+    This works by using RedBaron to fetch the source code of the first object
+    that shares its name and kind with the target, inside the Python file from
+    which the target has been loaded.
+    """
+    assert kind in ('class', 'def')
+
     filepath = inspect.getsourcefile(target)
     red = redbaron.RedBaron(open(filepath).read())
-    return red.find('class', target.__name__).dumps()
+    # dumps() returns Python code as a string
+    return red.find(kind, target.__name__).dumps()
+
+
+def reload_target(target, kind):
+    """Get the new target class/function corresponding to the given target.
+
+    This works by executing the new source code of the target inside the
+    namespace of its module (for imports, ...), and then returning the variable
+    sharing its name with the target from the new local namespace.
+    """
+    assert kind in ('class', 'def')
+
+    source = get_new_source(target, kind)
+    module = inspect.getmodule(target)
+    # We will populate these locals using exec()
+    locals_ = {}
+    # module.__dict__ is the namespace of the module
+    exec(source, module.__dict__, locals_)
+    # The result is expected to be decorated with @reloadr, so we return
+    # ._target, which corresponds to the class itself and not the Reloadr class
+    return locals_[target.__name__]._target
 
 
 def reload_class(target):
-    source = get_new_class_source(target)
-    module = inspect.getmodule(target)
-    locals_ = {}
-    exec(source, module.__dict__, locals_)
-    return locals_[target.__name__]._target
-
-
-def get_new_function_source(target):
-    filepath = inspect.getsourcefile(target)
-    red = redbaron.RedBaron(open(filepath).read())
-    return red.find('def', target.__name__).dumps()
+    "Get the new class object corresponding to the target class."
+    return reload_target(target, 'class')
 
 
 def reload_function(target):
-    source = get_new_function_source(target)
-    module = inspect.getmodule(target)
-    locals_ = {}
-    exec(source, module.__dict__, locals_)
-    return locals_[target.__name__]._target
+    "Get the new function object corresponding to the target function."
+    return reload_target(target, 'def')
 
 
 class GenericReloadr:
