@@ -1,5 +1,5 @@
 """Reloadr - Python library for hot code reloading
-(c) 2015 Hugo Herter
+(c) 2015-2016 Hugo Herter
 """
 
 __author__ = "Hugo Herter"
