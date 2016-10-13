@@ -2,15 +2,15 @@
 (c) 2015-2016 Hugo Herter
 """
 
-__author__ = "Hugo Herter"
-__version__ = '0.1.2'
-
 import inspect
 import redbaron
 from baron.parser import ParsingError
 import threading
 import types
 from time import sleep
+
+__author__ = "Hugo Herter"
+__version__ = '0.1.2'
 
 
 def get_new_class_source(target):
