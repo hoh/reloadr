@@ -60,45 +60,51 @@ def reload_function(target):
 
 class GenericReloadr:
 
-    def __init__(self, target):
-        # target is the decorated class/function
-        self._target = target
-        self._instance = None
-
-    def __call__(self, *args, **kwargs):
-        if self._instance is None:
-            self._init_args = args
-            self._init_kwargs = kwargs
-            self._instance = self._target.__call__(*args, **kwargs)
-            return self._instance
-        else:
-            return self._instance.__call__(*args, **kwargs)
-
     def _autoreload(self, interval=1):
+        "Reload the target every `interval` seconds."
         while True:
             self._reload()
             sleep(interval)
 
     def _start_autoreload(self, interval=1):
+        "Start a thread that reloads the target every `interval` seconds."
         thread = threading.Thread(target=self._autoreload)
-        print(thread)
         thread.start()
-        print(thread)
 
 
 class ClassReloadr(GenericReloadr):
+
+    def __init__(self, target):
+        # target is the decorated class/function
+        self._target = target
+        self._instances = []  # For classes, keep a reference to all instances
+
+    def __call__(self, *args, **kwargs):
+        instance = self._target.__call__(*args, **kwargs)
+        # Register a reference to the instance
+        self._instances.append(instance)
+        return instance
 
     def _reload(self):
         "Manually reload the class with its new code."
         try:
             self._target = reload_class(self._target)
-            # Replace the class reference of an instance with the new class obj
-            self._instance.__class__ = self._target
+            # Replace the class reference of all instances with the new class
+            for instance in self._instances:
+                instance.__class__ = self._target
         except ParsingError as error:
             print('ParsingError', error)
 
 
 class FuncReloadr(GenericReloadr):
+
+    def __init__(self, target):
+        # target is the decorated class/function
+        self._target = target
+
+    def __call__(self, *args, **kwargs):
+        "Proxy function call to the target"
+        return self._target.__call__(*args, **kwargs)
 
     def _reload(self):
         "Manually reload the function with its new code."
