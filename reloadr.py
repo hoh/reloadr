@@ -61,6 +61,7 @@ def reload_function(target):
 class GenericReloadr:
 
     def __init__(self, target):
+        # target is the decorated class/function
         self._target = target
         self._instance = None
 
@@ -88,8 +89,10 @@ class GenericReloadr:
 class ClassReloadr(GenericReloadr):
 
     def _reload(self):
+        "Manually reload the class with its new code."
         try:
             self._target = reload_class(self._target)
+            # Replace the class reference of an instance with the new class obj
             self._instance.__class__ = self._target
         except ParsingError as error:
             print('ParsingError', error)
@@ -98,6 +101,7 @@ class ClassReloadr(GenericReloadr):
 class FuncReloadr(GenericReloadr):
 
     def _reload(self):
+        "Manually reload the function with its new code."
         try:
             self._instance = reload_function(self._target)
         except ParsingError as error:
@@ -105,6 +109,7 @@ class FuncReloadr(GenericReloadr):
 
 
 def reloadr(target):
+    "Main decorator, forwards the target to the appropriate class."
     if isinstance(target, types.FunctionType):
         return FuncReloadr(target)
     else:
