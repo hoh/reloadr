@@ -3,7 +3,7 @@
 """
 
 __author__ = "Hugo Herter"
-__version__ = 0.1
+__version__ = '0.1.2'
 
 import inspect
 import redbaron
