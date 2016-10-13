@@ -7,6 +7,7 @@ __version__ = 0.1
 
 import inspect
 import redbaron
+from baron.parser import ParsingError
 import threading
 import types
 from time import sleep
@@ -70,14 +71,20 @@ class GenericReloadr:
 class ClassReloadr(GenericReloadr):
 
     def _reload(self):
-        self._target = reload_class(self._target)
-        self._instance.__class__ = self._target
+        try:
+            self._target = reload_class(self._target)
+            self._instance.__class__ = self._target
+        except ParsingError as error:
+            print('ParsingError', error)
 
 
 class FuncReloadr(GenericReloadr):
 
     def _reload(self):
-        self._instance = reload_function(self._target)
+        try:
+            self._instance = reload_function(self._target)
+        except ParsingError as error:
+            print('ParsingError', error)
 
 
 def reloadr(target):
