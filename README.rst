@@ -24,6 +24,16 @@ you are ready to go.
         def do_stuff(self):
             pass
 
+Then, to reload the code, you can use of the following:
+
+.. code:: Python
+
+    # Manual reload
+    SomeThing._reload()
+
+    # Automatic reload in a thread every 1 second
+    SomeThing._start_autoreload(1)
+
 Examples
 ========
 
