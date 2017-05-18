@@ -9,6 +9,7 @@ from baron.parser import ParsingError
 import threading
 import types
 from time import sleep
+import weakref
 
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -103,7 +104,7 @@ class ClassReloadr(GenericReloadr):
     def __call__(self, *args, **kwargs):
         instance = self._target.__call__(*args, **kwargs)
         # Register a reference to the instance
-        self._instances.append(instance)
+        self._instances.append(weakref.ref(instance))
         return instance
 
     def _reload(self):
@@ -111,8 +112,10 @@ class ClassReloadr(GenericReloadr):
         try:
             self._target = reload_class(self._target)
             # Replace the class reference of all instances with the new class
-            for instance in self._instances:
-                instance.__class__ = self._target
+            for ref in self._instances:
+                instance = ref()  # We keep weak references to objects
+                if instance:
+                    instance.__class__ = self._target
         except ParsingError as error:
             print('ParsingError', error)
 
