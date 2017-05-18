@@ -2,6 +2,7 @@
 (c) 2015-2016 Hugo Herter
 """
 
+from os.path import dirname
 import inspect
 import redbaron
 from baron.parser import ParsingError
@@ -9,8 +10,11 @@ import threading
 import types
 from time import sleep
 
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
 __author__ = "Hugo Herter"
-__version__ = '0.2.0'
+__version__ = '0.3.0'
 
 
 def get_new_source(target, kind):
@@ -60,16 +64,33 @@ def reload_function(target):
 
 class GenericReloadr:
 
-    def _autoreload(self, interval=1):
+    def _timer_reload(self, interval=1):
         "Reload the target every `interval` seconds."
         while True:
             self._reload()
             sleep(interval)
 
-    def _start_autoreload(self, interval=1):
+    def _start_timer_reload(self, interval=1):
         "Start a thread that reloads the target every `interval` seconds."
-        thread = threading.Thread(target=self._autoreload)
+        thread = threading.Thread(target=self._timer_reload)
         thread.start()
+
+    def _start_watch_reload(self):
+        "Reload the target based on file changes in the directory"
+        observer = Observer()
+        filepath = inspect.getsourcefile(self._target)
+        filedir = dirname(filepath)
+
+        this = self
+
+        class EventHandler(FileSystemEventHandler):
+            def on_modified(self, event):
+                this._reload()
+
+        # Sadly, watchdog only operates on directories and not on a file
+        # level, so any change within the directory will trigger a reload.
+        observer.schedule(EventHandler(), filedir, recursive=False)
+        observer.start()
 
 
 class ClassReloadr(GenericReloadr):

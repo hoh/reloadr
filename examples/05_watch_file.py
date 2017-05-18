@@ -21,7 +21,7 @@ class Car:
 
 
 car = Car(1000, 3000)
-Car._start_timer_reload(1)
+Car._start_watch_reload()
 
 while True:
     car.move(1, 1)
