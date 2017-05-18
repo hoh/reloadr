@@ -31,8 +31,11 @@ Then, to reload the code, you can use of the following:
     # Manual reload
     SomeThing._reload()
 
+    # Automatic reload using system (requires library 'watchdog')
+    SomeThing._start_watch_reload()
+
     # Automatic reload in a thread every 1 second
-    SomeThing._start_autoreload(1)
+    SomeThing._start_timer_reload(1)
 
 Examples
 ========
@@ -61,6 +64,4 @@ Python source code.
 Future plans
 ============
 
-This project is still in its early stages. The next main step is to add an
-option for using ``inotify`` to receive file change events directly from the
-filesystem.
+This project is still in its early stages. All ideas for improvement are welcome.
