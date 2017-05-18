@@ -18,7 +18,7 @@ __author__ = "Hugo Herter"
 __version__ = '0.3.0'
 
 
-def get_new_source(target, kind):
+def get_new_source(target, kind, filepath=None):
     """Get the new source code of the target if given kind ('class' or 'def').
 
     This works by using RedBaron to fetch the source code of the first object
@@ -27,13 +27,13 @@ def get_new_source(target, kind):
     """
     assert kind in ('class', 'def')
 
-    filepath = inspect.getsourcefile(target)
+    filepath = filepath or inspect.getsourcefile(target)
     red = redbaron.RedBaron(open(filepath).read())
     # dumps() returns Python code as a string
     return red.find(kind, target.__name__).dumps()
 
 
-def reload_target(target, kind):
+def reload_target(target, kind, filepath=None):
     """Get the new target class/function corresponding to the given target.
 
     This works by executing the new source code of the target inside the
@@ -42,7 +42,7 @@ def reload_target(target, kind):
     """
     assert kind in ('class', 'def')
 
-    source = get_new_source(target, kind)
+    source = get_new_source(target, kind, filepath)
     module = inspect.getmodule(target)
     # We will populate these locals using exec()
     locals_ = {}
@@ -58,9 +58,9 @@ def reload_class(target):
     return reload_target(target, 'class')
 
 
-def reload_function(target):
+def reload_function(target, filepath: str):
     "Get the new function object corresponding to the target function."
-    return reload_target(target, 'def')
+    return reload_target(target, 'def', filepath)
 
 
 class GenericReloadr:
@@ -125,6 +125,7 @@ class FuncReloadr(GenericReloadr):
     def __init__(self, target):
         # target is the decorated class/function
         self._target = target
+        self._filepath = inspect.getsourcefile(target)
 
     def __call__(self, *args, **kwargs):
         "Proxy function call to the target"
@@ -133,7 +134,7 @@ class FuncReloadr(GenericReloadr):
     def _reload(self):
         "Manually reload the function with its new code."
         try:
-            self._instance = reload_function(self._target)
+            self._target = reload_function(self._target, self._filepath)
         except ParsingError as error:
             print('ParsingError', error)
 
