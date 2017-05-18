@@ -102,10 +102,15 @@ class ClassReloadr(GenericReloadr):
         self._instances = []  # For classes, keep a reference to all instances
 
     def __call__(self, *args, **kwargs):
+        "Override instantiation in order to register a reference to the instance"
         instance = self._target.__call__(*args, **kwargs)
         # Register a reference to the instance
         self._instances.append(weakref.ref(instance))
         return instance
+
+    def __getattr__(self, name):
+        "Proxy inspection to the target"
+        return self._target.__getattr__(name)
 
     def _reload(self):
         "Manually reload the class with its new code."
@@ -130,6 +135,10 @@ class FuncReloadr(GenericReloadr):
     def __call__(self, *args, **kwargs):
         "Proxy function call to the target"
         return self._target.__call__(*args, **kwargs)
+
+    def __getattr__(self, name):
+        "Proxy inspection to the target"
+        return self._target.__getattr__(name)
 
     def _reload(self):
         "Manually reload the function with its new code."
