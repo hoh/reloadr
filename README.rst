@@ -8,30 +8,40 @@ Python hot code reloading tool.
 Usage
 =====
 
-You can simply decorate your functions / classes with ``@reloadr`` and
+You can simply decorate your functions / classes with ``@autoreload`` and
 you are ready to go.
 
 .. code:: python
 
-    from reloadr import reloadr
+    from reloadr import autoreload
 
-    @reloadr
+    @autoreload
     def do_something(a, b):
         return a + b
+
+    @autoreload
+    class SomeThing:
+        def do_stuff(self):
+            pass
+
+Advanced usage
+==============
+
+To reload the code manually, you can use of the following:
+
+.. code:: Python
+
+    from reloadr import reloadr
 
     @reloadr
     class SomeThing:
         def do_stuff(self):
             pass
 
-Then, to reload the code, you can use of the following:
-
-.. code:: Python
-
     # Manual reload
     SomeThing._reload()
 
-    # Automatic reload using system (requires library 'watchdog')
+    # Automatic reload using filesystem notifications
     SomeThing._start_watch_reload()
 
     # Automatic reload in a thread every 1 second
