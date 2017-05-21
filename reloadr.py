@@ -15,7 +15,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 __author__ = "Hugo Herter"
-__version__ = '0.3.0'
+__version__ = '0.3.2'
 
 
 def get_new_source(target, kind, filepath=None):
@@ -154,3 +154,10 @@ def reloadr(target):
         return FuncReloadr(target)
     else:
         return ClassReloadr(target)
+
+
+def autoreload(target):
+    "Decorator that immediately starts watching the source file in a thread."
+    result = reloadr(target)
+    result._start_watch_reload()
+    return result
