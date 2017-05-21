@@ -25,6 +25,7 @@ setup(name='Reloadr',
       data_files=[],
       install_requires=[
           'redbaron',
+          'watchdog',
           ],
       license='LGPLv3',
       platform='any',
