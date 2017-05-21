@@ -2,7 +2,7 @@
 (c) 2015-2017 Hugo Herter
 """
 
-from os.path import dirname
+from os.path import dirname, abspath
 import inspect
 import redbaron
 from baron.parser import ParsingError
@@ -15,7 +15,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 __author__ = "Hugo Herter"
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 
 
 def get_new_source(target, kind, filepath=None):
@@ -80,7 +80,7 @@ class GenericReloadr:
         "Reload the target based on file changes in the directory"
         observer = Observer()
         filepath = inspect.getsourcefile(self._target)
-        filedir = dirname(filepath)
+        filedir = dirname(abspath(filepath))
 
         this = self
 

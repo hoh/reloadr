@@ -14,7 +14,7 @@ with open('README.rst') as file:
     long_description = file.read()
 
 setup(name='Reloadr',
-      version='0.3.2',
+      version='0.3.3',
       description='Hot code reloading tool for Python',
       long_description=long_description,
       author='Hugo Herter',
