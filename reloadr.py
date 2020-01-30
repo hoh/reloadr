@@ -1,9 +1,6 @@
 """Reloadr - Python library for hot code reloading
 (c) 2015-2020 Hugo Herter
 """
-
-from __future__ import annotations
-
 from typing import Any
 from time import sleep
 
@@ -17,7 +14,7 @@ from watchdog.events import FileSystemEventHandler, FileModifiedEvent
 from watchdog.observers import Observer
 
 __author__ = "Hugo Herter"
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 
 def get_new_source(target, kind: str) -> str:
