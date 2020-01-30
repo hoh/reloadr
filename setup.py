@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Reloadr - Python library for hot code reloading
-(c) 2015-2017 Hugo Herter
+(c) 2015-2020 Hugo Herter
 """
 
 import os
@@ -14,7 +14,7 @@ with open('README.rst') as file:
     long_description = file.read()
 
 setup(name='Reloadr',
-      version='0.3.3',
+      version='0.4.0',
       description='Hot code reloading tool for Python',
       long_description=long_description,
       author='Hugo Herter',
@@ -24,7 +24,6 @@ setup(name='Reloadr',
       scripts=['reloadr.py'],
       data_files=[],
       install_requires=[
-          'redbaron',
           'watchdog',
           ],
       license='LGPLv3',
